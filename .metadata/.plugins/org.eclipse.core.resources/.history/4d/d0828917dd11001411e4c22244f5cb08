@@ -1,0 +1,51 @@
+package com.example.infinitemessaging;
+
+import android.app.ListActivity;
+import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
+import android.support.v4.widget.SimpleCursorAdapter;
+import android.view.View;
+import android.widget.ListView;
+
+public class Inbox extends ListActivity {
+
+	DBHelper oData;
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.listview_activity_main);
+		oData = new DBHelper(this);
+		SQLiteDatabase db = oData.getReadableDatabase();
+		String sql = "SELECT "+DBConstants.KEY_id+","
+					+ DBConstants.KEY_time +","
+				    + DBConstants.KEY_title +","
+					+ DBConstants.KEY_body +" FROM push.db";
+	   Cursor oLoop = db.rawQuery(sql, null);
+	   startManagingCursor(oLoop);
+	   String[] from = new String[]{ 
+			                         DBConstants.KEY_time,
+			                         DBConstants.KEY_title,
+			                         DBConstants.KEY_body
+			                        };
+	   int[] to    = new int[]{R.id.txtTime,R.id.txtTitle,R.id.txtMsg};
+	   SimpleCursorAdapter oList = new SimpleCursorAdapter(this, 
+			                       R.layout.listview_each_item, oLoop, from, to);
+	}
+	
+	public void onListItemClick(ListView parent, View v, int position, long id) {
+
+		Intent myIntent = new Intent(v.getContext(), Inboxmessage.class);
+		// save id
+		Bundle b = new Bundle();
+		b.putLong("id", id);
+		myIntent.putExtras(b);
+
+		startActivity(myIntent);
+
+	}
+
+}

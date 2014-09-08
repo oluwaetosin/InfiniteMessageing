@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.infinitemessaging"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="8"
+        android:targetSdkVersion="19" />
+   <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"></uses-permission>
+   <permission android:name="com.example.infinitemessaging.permission.C2D_MESSAGE"
+		android:protectionLevel="signature" />
+    <!-- Permission to receive push notifications -->
+	<uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+	<!-- Previously custom defined permission -->
+	<uses-permission android:name="com.example.infinitemessaging.permission.C2D_MESSAGE" />
+	<!-- Connect to the Infobip Push service -->
+	<uses-permission android:name="android.permission.INTERNET" />
+	<!-- Using push notifications requires a Google account -->
+	<uses-permission android:name="android.permission.GET_ACCOUNTS" />
+	<!-- Keeps the processor from sleeping when a message is received -->
+	<uses-permission android:name="android.permission.WAKE_LOCK" />
+	<!-- Checks network state -->
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+	<!-- Needed for push notifications that contain VIBRATE flag. Optional, 
+		but recommended. -->
+	<uses-permission android:name="android.permission.VIBRATE" />
+	<application android:allowBackup="true" android:icon="@drawable/ic_launcher"
+		android:label="@string/app_name" android:theme="@style/AppTheme" android:hardwareAccelerated="true">
+		<activity android:name="com.example.infinitemessaging.MainActivity"
+			android:label="@string/app_name">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN" />
+
+				<category android:name="android.intent.category.LAUNCHER" />
+			</intent-filter>
+		</activity>
+		<activity android:name="com.example.infinitemessaging.Inbox"
+			android:label="@string/app_name">
+		</activity>
+		<activity android:name="com.example.infinitemessaging.Inboxmessage"
+			android:label="@string/app_name">
+		</activity>
+		<activity android:name="com.example.infinitemessaging.ConfirmSignup"
+			android:label="@string/app_name">
+		</activity>
+		<activity android:name="com.example.infinitemessaging.SendRequest"
+			android:label="@string/app_name">
+		</activity>
+		<activity android:name="com.example.infinitemessaging.Channels"
+			android:label="@string/app_name">
+		</activity>
+		<activity android:name="com.example.infinitemessaging.RequestActivity"
+			android:label="@string/app_name">
+		</activity>
+		<activity android:name="com.example.infinitemessaging.PushRequestActivity"
+			android:label="@string/app_name">
+		</activity>
+
+		<service android:name="com.infobip.push.lib.InfobipPushService" />
+		<receiver android:name="com.infobip.push.lib.InternalReceiver" />
+		<receiver android:name="com.infobip.push.lib.InfobipPushReceiver"
+			android:permission="com.google.android.c2dm.permission.SEND">
+			<intent-filter>
+				<action android:name="com.google.android.c2dm.intent.RECEIVE" />
+				<action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+				<category android:name="com.example.infinitemessaging" />
+			</intent-filter>
+		</receiver>
+
+		<receiver android:name=".MyPushReceiver"
+			android:permission="com.example.infinitemessaging.permission.C2D_MESSAGE">
+			<intent-filter>
+				<action android:name="com.infobip.push.intent.REGISTERED_FOR_NOTIFICATIONS" />
+				<action android:name="com.infobip.push.intent.REGISTRATION_REFRESHED" />
+				<action android:name="com.infobip.push.intent.UNREGISTERED_FROM_NOTIFICATIONS" />
+				<action android:name="com.infobip.push.intent.NOTIFICATION_RECEIVED" />
+				<action android:name="com.infobip.push.intent.NOTIFICATION_OPENED" />
+				<action android:name="com.infobip.push.intent.ERROR" />
+				<category android:name="com.example.infinitemessaging" />
+			</intent-filter>
+		</receiver>
+	</application>
+
+</manifest>

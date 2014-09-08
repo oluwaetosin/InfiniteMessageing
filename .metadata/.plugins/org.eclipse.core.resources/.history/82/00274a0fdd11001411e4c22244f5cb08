@@ -1,0 +1,36 @@
+package com.example.infinitemessaging;
+
+import android.app.ListActivity;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
+import android.support.v4.widget.SimpleCursorAdapter;
+
+public class Inbox extends ListActivity {
+
+	DBHelper oData;
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.listview_activity_main);
+		oData = new DBHelper(this);
+		SQLiteDatabase db = oData.getReadableDatabase();
+		String sql = "SELECT "+DBConstants.KEY_id+","
+					+ DBConstants.KEY_time +","
+				    + DBConstants.KEY_title +","
+					+ DBConstants.KEY_body +" FROM push.db";
+	   Cursor oLoop = db.rawQuery(sql, null);
+	   startManagingCursor(oLoop);
+	   String[] from = new String[]{ 
+			                         DBConstants.KEY_time,
+			                         DBConstants.KEY_title,
+			                         DBConstants.KEY_body
+			                        };
+	   int[] to    = new int[]{R.id.txtTime,R.id.txtTitle,R.id.txtMsg};
+	   SimpleCursorAdapter oList = new SimpleCursorAdapter(this, 
+			                       R.layout.listview_each_item, oLoop, from, to);
+	}
+
+}

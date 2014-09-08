@@ -1,0 +1,96 @@
+package com.example.infinitemessaging;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.app.Activity;
+import android.app.ListActivity;
+import android.app.ProgressDialog;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.webkit.WebView;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+
+public class RequestActivity extends Activity{
+	
+	protected String url = "http://www.watershedcorporation.com/push/engine/enquiry/index.php";
+	protected String request = null;
+    private static final String TAG_REPLY = "reply"; 
+    private static final String TAG_CONTENT = "content"; 
+    private static String TAG_CONTENT_VALUE = null; 
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_request);
+		Button sendRequest = (Button) findViewById(R.id.buttonSend);
+		final EditText requestText  = (EditText) findViewById(R.id.EdtRequest);
+		
+		sendRequest.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				request  = requestText.getText().toString();
+				// TODO Auto-generated method stub
+				String[] parameter = {request};
+				new WebData().execute(parameter);
+			   
+				
+			}
+		});
+	}
+      public class WebData extends AsyncTask<String, Void, Void>{
+        
+    	private ProgressDialog pDialog;
+		private String jsonString = null;
+	    WebView webview = findViewById(R.id.webRequestView);
+
+		@Override
+    	protected void onPreExecute() {
+    		// TODO Auto-generated method stub
+    		super.onPreExecute();
+    		pDialog = new ProgressDialog(RequestActivity.this);
+			pDialog.setMessage("...Please Wait");
+			pDialog.setCancelable(false);
+			pDialog.show();
+    	}
+    	  
+		@Override
+		protected Void doInBackground(String... params) {
+			// TODO Auto-generated method stub
+			
+			  jsonString = new ServiceCall().getWebData(url,params[0]);
+			
+			return null;
+		}
+		
+		@Override
+		protected void onPostExecute(Void result) {
+			// TODO Auto-generated method stub
+			super.onPostExecute(result);
+			 if (pDialog.isShowing())
+	             pDialog.dismiss();
+			 final EditText requestText  = (EditText) findViewById(R.id.EdtRequest);
+			    if(jsonString != null){
+			    	Log.d("status",jsonString);
+			    	try {
+						JSONObject jsonObject = new JSONObject(jsonString);
+					    TAG_CONTENT_VALUE = 	jsonObject.getString("content");
+						Toast.makeText(RequestActivity.this, TAG_CONTENT_VALUE, Toast.LENGTH_LONG).show();
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+			    	requestText.setText(jsonString + jsonString + "Hello");
+			    	
+			    }else{
+			    	requestText.setText(jsonString + " cant find data ");
+			    	Log.d("status","null");
+			    }
+		}
+      }
+}

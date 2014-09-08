@@ -1,0 +1,23 @@
+package com.example.infinitemessaging;
+
+import android.app.ListActivity;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
+
+public class Inbox extends ListActivity {
+
+	DBHelper oData;
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.listview_activity_main);
+		oData = new DBHelper(this);
+		SQLiteDatabase db = oData.getReadableDatabase();
+		String sql = "SELECT "+DBConstants.KEY_id+","
+					+ DBConstants.KEY_time +","
+					+ DBConstants.KEY_body +" FROM push.db";
+	}
+
+}
