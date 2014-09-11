@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item android:id="@+id/chaennels" android:title="Channels" android:icon="@drawable/abc_ic_menu_moreoverflow_normal_holo_dark"></item>
+    <item android:id="@+id/sendRequest" android:title="Send Request"></item>
+    <item android:id="@+id/request_push" android:title="Push Request"></item>
+
+</menu>

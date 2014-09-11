@@ -112,6 +112,7 @@ public class ConfirmSignup extends Activity {
 		RegisterData sendValues = new RegisterData();
 		sendValues.execute(new String[] { phoneNumber, userId, deviceId,
 				latitude, longitude });
+		
 	}
 
 	private void checkMethod(final PushNotificationManager manager) {

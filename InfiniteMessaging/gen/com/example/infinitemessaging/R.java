@@ -982,13 +982,14 @@ containing a value of this type.
         public static final int abc_textfield_searchview_holo_light=0x7f020054;
         public static final int abc_textfield_searchview_right_holo_dark=0x7f020055;
         public static final int abc_textfield_searchview_right_holo_light=0x7f020056;
-        public static final int bg=0x7f020057;
-        public static final int bgmessage=0x7f020058;
-        public static final int ic_action_read=0x7f020059;
-        public static final int ic_action_unread=0x7f02005a;
-        public static final int ic_launcher=0x7f02005b;
-        public static final int midscreenbg=0x7f02005c;
-        public static final int regbtn=0x7f02005d;
+        public static final int alert=0x7f020057;
+        public static final int bg=0x7f020058;
+        public static final int bgmessage=0x7f020059;
+        public static final int ic_action_read=0x7f02005a;
+        public static final int ic_action_unread=0x7f02005b;
+        public static final int ic_launcher=0x7f02005c;
+        public static final int midscreenbg=0x7f02005d;
+        public static final int regbtn=0x7f02005e;
     }
     public static final class id {
         public static final int EdtRequest=0x7f050045;
@@ -1004,11 +1005,12 @@ containing a value of this type.
         public static final int action_menu_presenter=0x7f050017;
         public static final int action_mode_close_button=0x7f050024;
         public static final int activity_chooser_view_content=0x7f050025;
+        public static final int alert=0x7f050056;
         public static final int always=0x7f05000b;
         public static final int beginning=0x7f050011;
         public static final int button1=0x7f050054;
         public static final int buttonSend=0x7f050046;
-        public static final int chaennels=0x7f050056;
+        public static final int chaennels=0x7f050057;
         public static final int checkbox=0x7f05002d;
         public static final int collapseActionView=0x7f05000d;
         public static final int default_activity_button=0x7f050028;
@@ -1033,7 +1035,7 @@ containing a value of this type.
         public static final int imageButton1=0x7f05003d;
         public static final int imageButtonRegister=0x7f050042;
         public static final int imageView1=0x7f05004d;
-        public static final int inbox=0x7f050059;
+        public static final int inbox=0x7f05005a;
         public static final int listMode=0x7f050001;
         public static final int list_item=0x7f050029;
         public static final int middle=0x7f050012;
@@ -1044,7 +1046,7 @@ containing a value of this type.
         public static final int progress_horizontal=0x7f050019;
         public static final int radio=0x7f05002f;
         public static final int radioBtn=0x7f050048;
-        public static final int request_push=0x7f050058;
+        public static final int request_push=0x7f050059;
         public static final int search_badge=0x7f050032;
         public static final int search_bar=0x7f050031;
         public static final int search_button=0x7f050033;
@@ -1055,7 +1057,7 @@ containing a value of this type.
         public static final int search_plate=0x7f050036;
         public static final int search_src_text=0x7f050037;
         public static final int search_voice_btn=0x7f05003b;
-        public static final int sendRequest=0x7f050057;
+        public static final int sendRequest=0x7f050058;
         public static final int shortcut=0x7f05002e;
         public static final int showCustom=0x7f050007;
         public static final int showHome=0x7f050004;
@@ -1137,10 +1139,11 @@ containing a value of this type.
         public static final int channel_list=0x7f03001a;
         public static final int channels=0x7f03001b;
         public static final int inboxmessage=0x7f03001c;
-        public static final int listview_each_item=0x7f03001d;
-        public static final int request_each_item=0x7f03001e;
-        public static final int send_request=0x7f03001f;
-        public static final int support_simple_spinner_dropdown_item=0x7f030020;
+        public static final int listactivity_inbox=0x7f03001d;
+        public static final int listview_each_item=0x7f03001e;
+        public static final int request_each_item=0x7f03001f;
+        public static final int send_request=0x7f030020;
+        public static final int support_simple_spinner_dropdown_item=0x7f030021;
     }
     public static final class menu {
         public static final int inbox=0x7f0c0000;
@@ -1150,8 +1153,10 @@ containing a value of this type.
         public static final int send_request=0x7f0c0004;
     }
     public static final class string {
-        public static final int FIRST_TIME=0x7f0a0011;
-        public static final int PREF_NAME=0x7f0a0010;
+        public static final int FIRST_TIME=0x7f0a0014;
+        public static final int ImageButton1ContentDescription_actitvity_main=0x7f0a000f;
+        public static final int PREF_NAME=0x7f0a0013;
+        public static final int Signup=0x7f0a0010;
         /**  Content description for the action bar "home" affordance. [CHAR LIMIT=NONE] 
          */
         public static final int abc_action_bar_home_description=0x7f0a0001;
@@ -1193,12 +1198,13 @@ containing a value of this type.
          */
         public static final int abc_shareactionprovider_share_with_application=0x7f0a000b;
         public static final int app_name=0x7f0a000d;
-        public static final int contentDescription=0x7f0a0015;
-        public static final int deviceId=0x7f0a0012;
-        public static final int inbox=0x7f0a000f;
-        public static final int registerUserUrl=0x7f0a0014;
-        public static final int send_request=0x7f0a000e;
-        public static final int tableName=0x7f0a0013;
+        public static final int contentDescription=0x7f0a0018;
+        public static final int deviceId=0x7f0a0015;
+        public static final int editTextPhoneNumbHin_actitvity_main=0x7f0a000e;
+        public static final int inbox=0x7f0a0012;
+        public static final int registerUserUrl=0x7f0a0017;
+        public static final int send_request=0x7f0a0011;
+        public static final int tableName=0x7f0a0016;
     }
     public static final class style {
         /** 

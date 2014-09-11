@@ -19,7 +19,7 @@
           android:layout_below="@+id/textViewSignup"
           android:layout_marginTop="32dp"
           android:ems="10"
-          android:hint="Enter Phone Number"
+          android:hint="@string/editTextPhoneNumbHin_actitvity_main"
           android:inputType="phone"
           android:textSize="20sp" />
 
@@ -29,7 +29,7 @@
           android:layout_height="wrap_content"
           android:layout_below="@+id/editTextPhoneNumb"
           android:layout_centerHorizontal="true"
-          android:contentDescription="Regiter"
+          android:contentDescription="@string/ImageButton1ContentDescription_actitvity_main"
           android:src="@drawable/regbtn" />
 
       <TextView
@@ -40,7 +40,7 @@
           android:layout_alignParentTop="true"
           android:layout_marginTop="22dp"
           android:gravity="center"
-          android:text="Signup"
+          android:text="@string/Signup"
           android:textColor="#f5f5ed"
           android:textSize="40sp"
           android:textStyle="bold" />

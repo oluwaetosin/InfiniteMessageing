@@ -38,11 +38,12 @@
 <fullyQualifiedTypeName name="com.example.infinitemessaging.RequestActivity.WebData"/>
 <fullyQualifiedTypeName name="android.util.Log"/>
 <fullyQualifiedTypeName name="android.widget.EditText"/>
-<fullyQualifiedTypeName name="com.example.infinitemessaging.R.id"/>
 <fullyQualifiedTypeName name="com.example.infinitemessaging.R.layout"/>
-<fullyQualifiedTypeName name="android.view.View.OnClickListener"/>
-<fullyQualifiedTypeName name="android.widget.Toast"/>
 <fullyQualifiedTypeName name="com.example.infinitemessaging.RequestActivity"/>
 <fullyQualifiedTypeName name="com.example.infinitemessaging.PushRequestActivity"/>
 <fullyQualifiedTypeName name="com.example.infinitemessaging.Inbox"/>
+<fullyQualifiedTypeName name="android.widget.Button"/>
+<fullyQualifiedTypeName name="com.example.infinitemessaging.R.id"/>
+<fullyQualifiedTypeName name="android.view.View.OnClickListener"/>
+<fullyQualifiedTypeName name="android.widget.Toast"/>
 </qualifiedTypeNameHistroy>

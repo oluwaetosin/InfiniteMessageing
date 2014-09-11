@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name" translatable="false">InfiniteMessaging</string>
+    <string name="send_request" translatable="false">Send Request</string>
+    <string name="inbox" translatable="false">Inbox</string>
+    <string name="PREF_NAME" translatable="false">com.example.infinitemessaging.myPrefFile</string>
+    <string name="FIRST_TIME" translatable="false">my_first_time</string>
+    <string name="deviceId" translatable="false">deviceId</string>
+    <string name="tableName" translatable="false">push.db</string>
+    <string name="registerUserUrl" translatable="false">http://www.watershedcorporation.com/pushScripts/registeruser.php</string>
+     <string name="contentDescription" translatable="false">Content Description</string>
+</resources>

@@ -1,0 +1,48 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg"
+    android:gravity="center_horizontal"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:visibility="visible"
+    tools:context="com.example.infinitemessaging.MainActivity$PlaceholderFragment" >
+
+      <EditText
+          android:id="@+id/editTextPhoneNumb"
+          android:layout_width="280dp"
+          android:layout_height="40dp"
+          android:layout_alignRight="@+id/imageButton1"
+          android:layout_below="@+id/textViewSignup"
+          android:layout_marginTop="32dp"
+          android:ems="10"
+          android:hint="@string/editTextPhoneNumbHin_actitvity_main"
+          android:inputType="phone"
+          android:textSize="20sp" />
+
+      <ImageButton
+          android:id="@+id/imageButton1"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_below="@+id/editTextPhoneNumb"
+          android:layout_centerHorizontal="true"
+          android:contentDescription="@string/ImageButton1ContentDescription_actitvity_main"
+          android:src="@drawable/regbtn" />
+
+      <TextView
+          android:id="@+id/textViewSignup"
+          android:layout_width="300dp"
+          android:layout_height="wrap_content"
+          android:layout_alignLeft="@+id/editTextPhoneNumb"
+          android:layout_alignParentTop="true"
+          android:layout_marginTop="22dp"
+          android:gravity="center"
+          android:text="Signup"
+          android:textColor="#f5f5ed"
+          android:textSize="40sp"
+          android:textStyle="bold" />
+    
+</RelativeLayout>

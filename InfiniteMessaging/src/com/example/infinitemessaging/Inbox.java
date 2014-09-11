@@ -1,13 +1,27 @@
 package com.example.infinitemessaging;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.view.Menu;
@@ -17,6 +31,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.ResourceCursorAdapter;
@@ -26,14 +41,24 @@ import android.widget.Toast;
 public class Inbox extends ListActivity {
 
 	DBHelper oData;
+	Button getLocation;
+	LocationHelper location;
+	private String longitude;
+	private String latitude;
+	public static String userId = null;
+	public static String deviceId = null;
+	public static String url = "http://watershedcorporation.com/push/engine/receiveAlert/index.php";
+	SharedPreferences sharedprefernce;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		
-		// setContentView(R.layout.listview_activity_main);
-		   
+		 setContentView(R.layout.listactivity_inbox);
+		sharedprefernce = this.getSharedPreferences("com.example.infinitemessaging.myPrefFile",0);
+		 userId = sharedprefernce.getString("userID", "");
+		deviceId = sharedprefernce.getString("deviceID", "");
 		displayMessage();
 	}
 
@@ -76,6 +101,13 @@ public class Inbox extends ListActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// TODO Auto-generated method stub
 		switch (item.getItemId()) {
+		case R.id.alert:
+			getLocation();
+			Toast.makeText(Inbox.this, longitude + " " + latitude, Toast.LENGTH_LONG).show();
+			SendAlert sendAlert = new SendAlert();
+			sendAlert.execute(new String[]{latitude,longitude});
+			return true;
+			
 		case R.id.chaennels:
 			startActivity(new Intent(getBaseContext(), Channels.class));
 			return true;
@@ -194,4 +226,47 @@ public class Inbox extends ListActivity {
 			});
 	     alert.show();
 	    }
+	  public void getLocation() {
+			location = new LocationHelper(Inbox.this);
+			if (location.canGetLocation()) {
+				longitude = String.valueOf(location.longitude);
+				latitude = String.valueOf(location.latitude);
+			}
+		}
+	  
+	 private class SendAlert extends AsyncTask<String, Void, String>{
+                     
+		@Override
+		protected String doInBackground(String... params) {
+			// TODO Auto-generated method stub
+			String lat = params[0];
+			String lng = params[1];
+			 
+			
+			HttpClient httpclient = new DefaultHttpClient();
+			HttpPost httpost = new HttpPost(url);
+			try {
+				List<NameValuePair> nameValuePair = new ArrayList<NameValuePair>(
+						2);
+				nameValuePair.add(new BasicNameValuePair("lat", lat));
+				nameValuePair.add(new BasicNameValuePair("lng", lng));
+				nameValuePair.add(new BasicNameValuePair("userId", userId));
+				nameValuePair.add(new BasicNameValuePair("deviceID", deviceId));
+				httpost.setEntity(new UrlEncodedFormEntity(nameValuePair));
+				httpclient.execute(httpost);
+			} catch (ClientProtocolException e) {
+
+			} catch (IOException e) {
+				// TODO: handle exception
+			}
+			return null;
+		}
+		@Override
+		protected void onPostExecute(String result) {
+			Toast.makeText(getApplicationContext(), "Alert Sent", Toast.LENGTH_LONG).show();
+		}
+ 
+		 
+	 }
+	 
 }
