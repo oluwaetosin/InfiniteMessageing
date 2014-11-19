@@ -1,16 +1,14 @@
 package com.example.infinitemessaging;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
 
 import com.infobip.push.ChannelRegistrationListener;
 import com.infobip.push.PushNotificationManager;
@@ -33,6 +31,7 @@ import android.widget.Toast;
 
 public class Channels extends ListActivity {
 	DBHelper oData;
+	String domainUrl = getString(R.string.domainName);
 	MyAdapter myadapter;
 	List<String> channels = new ArrayList<String>();
 	String foundChannel = null;
@@ -174,37 +173,36 @@ public class Channels extends ListActivity {
 	
 	protected class ChannelUpdate extends AsyncTask<String, Void, String> {
 		protected String doInBackground(String... params) {
-			String id = params[0];
-			String deviceId = params[1];
-			String userId = params[2];
-			String updateType  = params[3];
-			
-		
- 			HttpClient httpclient = new DefaultHttpClient();
- 			HttpPost httpost = new HttpPost(
-					"http://www.watershedcorporation.com/push/channelSubscription.php");
+			 
+ 			 
 			try {
-				List<NameValuePair> nameValuePair = new ArrayList<NameValuePair>(
-						3);
-				nameValuePair.add(new BasicNameValuePair("id",id));
-				nameValuePair.add(new BasicNameValuePair("deviceId", deviceId));
-				nameValuePair.add(new BasicNameValuePair("userId", userId));
-				nameValuePair.add(new BasicNameValuePair("updateType", updateType));
+				URL url = new URL(domainUrl + "/push/channelSubscription.php");
+				HttpURLConnection conn;
+				String param = "id=" + URLEncoder.encode(params[0],"UTF-8");
+				param += "&deviceId=" + URLEncoder.encode(params[1],"UTF-8");
+				param += "&userId=" + URLEncoder.encode(params[2],"UTF-8");
+				param += "&updateType=" + URLEncoder.encode(params[3],"UTF-8");
+				 
+				conn=(HttpURLConnection)url.openConnection();
+				conn.setDoOutput(true);
+				conn.setRequestMethod("POST");
+				
+				conn.setFixedLengthStreamingMode(param.getBytes().length);
+				conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+				
+				//set the output to true, indicating you are outputting(uploading) POST data
+				PrintWriter out = new PrintWriter(conn.getOutputStream());
+				out.print(param);
+				out.close();
 
-				httpost.setEntity(new UrlEncodedFormEntity(nameValuePair));
-				httpclient.execute(httpost);
+				 
 			} catch (ClientProtocolException e) {
 
 			} catch (IOException e) {
 				// TODO: handle exception
 			}
-			return id  + " " + userId + " " + deviceId;
+			return null;
+			 
 		}
-
-		@Override
-		protected void onPostExecute(String result) {
-			Toast.makeText(getApplicationContext(),  result, Toast.LENGTH_LONG).show();
-		}
-
 	}
 }

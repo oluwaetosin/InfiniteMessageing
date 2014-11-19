@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.infobip.push.AbstractPushReceiver;
 import com.infobip.push.PushNotification;
+import com.infobip.push.PushNotificationBuilder;
     public class MyPushReceiver extends AbstractPushReceiver  {
 	 // get Instance  of Database Adapter
     	
@@ -27,6 +28,14 @@ import com.infobip.push.PushNotification;
 	@Override
 	public void onNotificationReceived(PushNotification notification,
 			Context context) {
+		PushNotificationBuilder builder = new PushNotificationBuilder(context);
+		builder.setLayoutId(R.layout.notification_drawer);
+		builder.setImageId(R.id.image);
+		builder.setImageDrawableId(R.drawable.app_icon);
+	    builder.setTitleId(R.id.title);
+	    builder.setDateId(R.id.date);
+	    builder.setTextId(R.id.text);
+
 		    // TODO Auto-generated method stub
 		    Calendar c = Calendar.getInstance();
 		    SimpleDateFormat sdf = new SimpleDateFormat("dd:MMMM:yyyy HH:mm:ss a");

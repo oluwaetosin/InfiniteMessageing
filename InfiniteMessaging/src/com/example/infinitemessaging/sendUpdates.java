@@ -18,14 +18,14 @@ import android.os.AsyncTask;
  public class sendUpdates extends AsyncTask<String, Void, String> {
 	 @Override
 	protected String doInBackground(String... params) {
-		
+	
 		String userId = params[0];
 		String deviceId = params[1];
 		String messageId = params[2];
 		String status = params[3];
 		HttpClient httpclient = new DefaultHttpClient();
 		HttpPost httpost = new HttpPost(
-				"http://www.watershedcorporation.com/push/receiveUpdates.php");
+				"https://www.mobilevirtua.com/push/receiveUpdates.php");
 		try {
 			List<NameValuePair> nameValuePair = new ArrayList<NameValuePair>(
 					3);

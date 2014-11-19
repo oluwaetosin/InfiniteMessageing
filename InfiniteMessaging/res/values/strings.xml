@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name" translatable="false">InfiniteMessaging</string>
+    <string name="app_name" translatable="false">Zigma</string>
     <string name="editTextPhoneNumbHin_actitvity_main" translatable="false">Enter Phone Number</string>
      <string name="ImageButton1ContentDescription_actitvity_main" translatable="false">Regiter</string>
       <string name="Signup" translatable="false">Signup</string>
@@ -13,5 +13,6 @@
     <string name="tableName" translatable="false">push.db</string>
     <string name="registerUserUrl" translatable="false">http://www.watershedcorporation.com/pushScripts/registeruser.php</string>
      <string name="contentDescription" translatable="false">Content Description</string>
+     <string name="domainName" translatable="false">https://www.mobilevirtua.com</string>
 </resources>
 

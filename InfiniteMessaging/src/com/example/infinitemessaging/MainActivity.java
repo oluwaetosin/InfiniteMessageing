@@ -1,17 +1,14 @@
 package com.example.infinitemessaging;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.PrintWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.Random;
+import java.util.Scanner;
 
-import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
 
 import android.app.Activity;
 import android.content.Context;
@@ -27,7 +24,7 @@ import android.widget.Toast;
 
 public class MainActivity extends Activity {
 	static Random random = new Random();
-	 
+	String domainUrl;
 	private static final String _CHAR = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
 	private static final int RANDOM_STR_LENGTH = 6;
 	EditText phoneNumber;
@@ -39,6 +36,7 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		domainUrl = getString(R.string.domainName); 
 		sharedpreferences = getSharedPreferences(getString(R.string.PREF_NAME),
 				Context.MODE_PRIVATE);
 
@@ -128,8 +126,9 @@ public class MainActivity extends Activity {
 	public void sendSmsData(String phoneNumber) {
 
 		sendSmsData sendSms = new sendSmsData();
+		Toast.makeText(getApplicationContext(), domainUrl+"/push/engine/push.php", Toast.LENGTH_LONG).show();
 		sendSms.execute(new String[] {
-				"http://www.watershedcorporation.com/push/engine/push.php", phoneNumber,
+				domainUrl+"/push/engine/push.php", phoneNumber,
 				randString });
 	}
 
@@ -138,30 +137,36 @@ public class MainActivity extends Activity {
 		@Override
 		protected String doInBackground(String... params) {
 			// TODO Auto-generated method stub
-			String url = params[0];
-			String phoneNumber = params[1];
-			String shortcode = params[2];
-			HttpClient httpclient = new DefaultHttpClient();
-			HttpPost httpost = new HttpPost(url);
+			String  response = null;
 			try {
-				List<NameValuePair> nameValuePair = new ArrayList<NameValuePair>(
-						2);
-				nameValuePair.add(new BasicNameValuePair("phone", phoneNumber));
-				nameValuePair
-						.add(new BasicNameValuePair("shortCode", shortcode));
-				httpost.setEntity(new UrlEncodedFormEntity(nameValuePair));
-				httpclient.execute(httpost);
+				URL url = new URL(params[0]);
+				HttpURLConnection conn;
+				String param = "phone=" + URLEncoder.encode(params[1],"UTF-8")+"&shortCode="+ URLEncoder.encode(params[2],"UTF-8");
+				conn=(HttpURLConnection)url.openConnection();
+				conn.setDoOutput(true);
+				conn.setRequestMethod("POST");
+				
+				conn.setFixedLengthStreamingMode(param.getBytes().length);
+				conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+				
+				//set the output to true, indicating you are outputting(uploading) POST data
+				PrintWriter out = new PrintWriter(conn.getOutputStream());
+				out.print(param);
+				out.close();
+				//start listening to the stream
+				Scanner inStream = new Scanner(conn.getInputStream());
+
+				//process the stream and store it in StringBuilder
+				while(inStream.hasNextLine()){
+				response +=(inStream.nextLine());
+				}
+				inStream.close();	
 			} catch (ClientProtocolException e) {
 
 			} catch (IOException e) {
 				// TODO: handle exception
 			}
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(String result) {
-
+			return response;
 		}
 
 	}

@@ -1,44 +1,40 @@
 package com.example.infinitemessaging;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
-import org.apache.http.util.EntityUtils;
+import java.io.PrintWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.util.Scanner;
 
 public class ServiceCall {
 	String response = null;
 	
-	public String getWebData(String url, String request,String mobileNumb){
-		   List<NameValuePair> list = new ArrayList<NameValuePair>(2);
-		   list.add(new BasicNameValuePair("request",request));
-		   list.add(new BasicNameValuePair("mobileNumb",mobileNumb));
+	public String getWebData(String Posturl, String request,String mobileNumb){
+		  
 		try {
+			URL url =  new URL(Posturl);
+			HttpURLConnection conn;
+			String param = "request="+URLEncoder.encode(request,"UTF-8") +
+					       "&mobileNumb=" + URLEncoder.encode(mobileNumb,"UTF-8");
+			 
+			conn=(HttpURLConnection)url.openConnection();
+			conn.setDoOutput(true);
+			conn.setRequestMethod("POST");
 			
-			HttpParams params = new BasicHttpParams();
-			int timeout       = 10000;
-			int socketTimeout = 30000;
-			HttpConnectionParams.setConnectionTimeout(params, timeout);
-	        HttpConnectionParams.setSoTimeout(params, socketTimeout);		
+			conn.setFixedLengthStreamingMode(param.getBytes().length);
+			conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+			PrintWriter out = new PrintWriter(conn.getOutputStream());
+			out.print(param);
+			out.close();
 			
-	        DefaultHttpClient httpClient = new DefaultHttpClient(params);
-	        HttpEntity httpEntity        = null;
-	        HttpResponse httpResponse    = null;
-	        
-	        HttpPost httppost   = new HttpPost(url);
-	        httppost.setEntity(new UrlEncodedFormEntity(list));
-			httpResponse   =  httpClient.execute(httppost);
-			httpEntity     = httpResponse.getEntity();
-			response       = EntityUtils.toString(httpEntity);
+			//start listening to the stream
+			Scanner inStream = new Scanner(conn.getInputStream());
+
+			//process the stream and store it in StringBuilder
+			while(inStream.hasNextLine()){
+			response +=(inStream.nextLine());
+			}
+			inStream.close();		 
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();

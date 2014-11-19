@@ -27,7 +27,9 @@
         android:id="@+id/txtInboxMsg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textStyle="normal" />
+        android:textStyle="normal"
+        android:text=""
+        android:background="#e1e3e6" />
     <com.infobip.push.media.MediaWebView
         android:id="@+id/txtMedia"
         android:layout_width="wrap_content"

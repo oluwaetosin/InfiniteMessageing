@@ -1,22 +1,21 @@
 package com.example.infinitemessaging;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
-import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -28,6 +27,7 @@ import com.infobip.push.PushNotificationManager;
 import com.infobip.push.RegistrationData;
 
 public class ConfirmSignup extends Activity {
+	String domainUrl;
 	String latitude = null;
 	String longitude = null;
 	LocationHelper location;
@@ -35,23 +35,30 @@ public class ConfirmSignup extends Activity {
 	EditText hiddenShortcode;
 	ImageButton register;
 	EditText inputShortcode;
-	EditText username;
+	EditText firstName;
+	String firstNameValue;
+	String lastNameValue;
+	EditText lastName;
 	EditText inputPhoneNumber;
 	public String phoneNumber;
 	public String shortcode = null;
 	SharedPreferences sharedPreferences;
 
+	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_register);
+		domainUrl = getString(R.string.domainName); 
 		final PushNotificationManager manager = new PushNotificationManager(
 				this);
 		manager.initialize("1079560850569", "c415a5b35c4c", "0b109ff2008c");
+		manager.setUserLocation(locationObject());
 		hiddenShortcode = (EditText) findViewById(R.id.editTexthiddenShortcode);
 		inputShortcode = (EditText) findViewById(R.id.editTextShortCode);
-		username = (EditText) findViewById(R.id.editTextUsername);
+		firstName = (EditText) findViewById(R.id.editTextFirstName);
+		lastName = (EditText) findViewById(R.id.editTextLastName);
 		inputPhoneNumber = (EditText) findViewById(R.id.editTextHiddenPhoneNumber);
 		register = (ImageButton) findViewById(R.id.imageButtonRegister);
 
@@ -84,7 +91,8 @@ public class ConfirmSignup extends Activity {
 					String deviceId = manager.getDeviceId();
 					// send registeration data to Url
 					sendRegisterationData(phoneNumber, phoneNumber, deviceId);
-					username.setText("");
+					firstName.setText("");
+					lastName.setText("");
 					inputShortcode.setText("");
 					
 					 
@@ -111,7 +119,7 @@ public class ConfirmSignup extends Activity {
 		getLocation();
 		RegisterData sendValues = new RegisterData();
 		sendValues.execute(new String[] { phoneNumber, userId, deviceId,
-				latitude, longitude });
+				latitude, longitude,lastNameValue,firstNameValue });
 		
 	}
 
@@ -119,7 +127,8 @@ public class ConfirmSignup extends Activity {
 		if (manager.isRegistered()) {
 			Intent intent = new Intent(getApplicationContext(), Inbox.class);
 			inputShortcode.setText("");
-			username.setText("");
+			lastName.setText("");
+			firstName.setText("");
 			Toast.makeText(getApplicationContext(),
 					"You are Already Registered", Toast.LENGTH_LONG).show();
 			startActivity(intent);
@@ -127,13 +136,20 @@ public class ConfirmSignup extends Activity {
 	}
 
 	public boolean valiadteInput() {
-		String userNameValue = username.getText().toString();
+		firstNameValue = firstName.getText().toString();
+	    lastNameValue = lastName.getText().toString();
 		String inputShortcodeValue = inputShortcode.getText().toString();
-		if (userNameValue.equals("")) {
-			Toast.makeText(getApplicationContext(), "Fill Username",
+		if (firstNameValue.equals("")) {
+			Toast.makeText(getApplicationContext(), "First Name Required",
 					Toast.LENGTH_LONG).show();
 			return false;
-		} else if (inputShortcode.equals("")) {
+		} 
+		else if (lastNameValue.equals("")) {
+			Toast.makeText(getApplicationContext(), "Last Name Required",
+					Toast.LENGTH_LONG).show();
+			return false;
+		} 
+		else if (inputShortcode.equals("")) {
 			Toast.makeText(getApplicationContext(), " Enter Short Code ",
 					Toast.LENGTH_LONG).show();
 			return false;
@@ -141,8 +157,7 @@ public class ConfirmSignup extends Activity {
 				hiddenShortcode.getText().toString().trim())) {
 			Toast.makeText(
 					getApplicationContext(),
-					" Short Code Invalid "
-							+ hiddenShortcode.getText().toString(),
+					" Short Code Invalid ",
 					Toast.LENGTH_LONG).show();
 			return false;
 		} else {
@@ -153,35 +168,43 @@ public class ConfirmSignup extends Activity {
 
 	protected class RegisterData extends AsyncTask<String, Void, String> {
 		protected String doInBackground(String... params) {
-			String phoneNumber = params[0];
-			String userId = params[1];
-			String deviceId = params[2];
-			String latitude = params[3];
-			String longitude = params[4];
-			HttpClient httpclient = new DefaultHttpClient();
-			HttpPost httpost = new HttpPost(
-					"http://www.watershedcorporation.com/push/registeruser.php");
+			   String response = null;
 			try {
-				List<NameValuePair> nameValuePair = new ArrayList<NameValuePair>(
-						3);
-				nameValuePair.add(new BasicNameValuePair("phone", phoneNumber));
-				nameValuePair.add(new BasicNameValuePair("userId", userId));
-				nameValuePair.add(new BasicNameValuePair("deviceId", deviceId));
-				nameValuePair.add(new BasicNameValuePair("lat", latitude));
-				nameValuePair.add(new BasicNameValuePair("lng", longitude));
-				httpost.setEntity(new UrlEncodedFormEntity(nameValuePair));
-				httpclient.execute(httpost);
+				 
+ 
+				URL url = new URL(domainUrl+"/push/registeruser.php");
+				HttpURLConnection conn;
+				String param = "lastName=" + URLEncoder.encode(params[5],"UTF-8") 
+						 + "&firstName=" + URLEncoder.encode(params[6], "UTF-8")
+				         + "&phone=" + URLEncoder.encode( params[0], "UTF-8")
+				         + "&userId=" + URLEncoder.encode(params[1], "UTF-8")
+				         + "&deviceId=" + URLEncoder.encode(params[2], "UTF-8")
+				         + "&lat=" + URLEncoder.encode(params[3], "UTF-8")
+				         + "&lng=" + URLEncoder.encode(params[4], "UTF-8");
+				conn = (HttpURLConnection)url.openConnection();
+				conn.setDoOutput(true);
+				conn.setRequestMethod("POST");
+				conn.setFixedLengthStreamingMode(param.getBytes().length);
+				conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+				//set the output to true, indicating you are outputting(uploading) POST data
+				PrintWriter out = new PrintWriter(conn.getOutputStream());
+				out.print(param);
+				out.close();
+				
+				//start listening to the stream
+				Scanner inStream = new Scanner(conn.getInputStream());
+
+				//process the stream and store it in StringBuilder
+				while(inStream.hasNextLine()){
+				response +=(inStream.nextLine());
+				}
+				inStream.close();	
 			} catch (ClientProtocolException e) {
 
 			} catch (IOException e) {
 				// TODO: handle exception
 			}
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(String result) {
-
+			return response;
 		}
 
 	}
@@ -192,5 +215,13 @@ public class ConfirmSignup extends Activity {
 			longitude = String.valueOf(location.longitude);
 			latitude = String.valueOf(location.latitude);
 		}
+	}
+	
+	private Location locationObject(){
+		location = new LocationHelper(ConfirmSignup.this);
+		if(location.canGetLocation()){
+			return location.getLocation();
+		}
+		else return null;
 	}
 }

@@ -1,5 +1,11 @@
 package com.example.infinitemessaging;
 
+import java.io.PrintWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.util.Scanner;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -15,10 +21,11 @@ import android.view.View;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class RequestActivity extends Activity{
 	
-	protected String url = "http://www.watershedcorporation.com/push/engine/enquiry/index.php";
+	protected String url;
 	protected String request = null;
     private static String TAG_CONTENT_VALUE = null; 
 	@Override
@@ -26,6 +33,7 @@ public class RequestActivity extends Activity{
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_request);
+		url = getString(R.string.domainName) + "/push/engine/enquiry/index.php";
 		Button sendRequest = (Button) findViewById(R.id.buttonSend);
 		final EditText requestText  = (EditText) findViewById(R.id.EdtRequest);
 		
@@ -37,8 +45,6 @@ public class RequestActivity extends Activity{
 				// TODO Auto-generated method stub
 				String[] parameter = {request};
 				new WebData().execute(parameter);
-			   
-				
 			}
 		});
 		
@@ -87,9 +93,41 @@ public class RequestActivity extends Activity{
     	  
 		@Override
 		protected Void doInBackground(String... params) {
+			String response = "";
 			// TODO Auto-generated method stub
+			try {
+				URL urlPost =  new URL(url);
+				HttpURLConnection conn;
+				String param = "request="+URLEncoder.encode(request,"UTF-8");
+						      // + "&mobileNumb=" + URLEncoder.encode(null,"UTF-8");
+				 
+				conn=(HttpURLConnection)urlPost.openConnection();
+				conn.setDoOutput(true);
+				conn.setRequestMethod("POST");
+				
+				conn.setFixedLengthStreamingMode(param.getBytes().length);
+				conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+				PrintWriter out = new PrintWriter(conn.getOutputStream());
+				out.print(param);
+				out.close();
+				
+				//start listening to the stream
+				Scanner inStream = new Scanner(conn.getInputStream());
+
+				//process the stream and store it in StringBuilder
+				while(inStream.hasNextLine()){
+				response +=(inStream.nextLine());
+				}
+				inStream.close();		 
+			} catch (Exception e) {
+				// TODO: handle exception
+				e.printStackTrace();
+			}
 			
-			  jsonString = new ServiceCall().getWebData(url,params[0],null);
+	        
+			jsonString  = response;
+		 
+			 // jsonString = new ServiceCall().getWebData(url,params[0],null);
 			
 			return null;
 		}
@@ -102,20 +140,22 @@ public class RequestActivity extends Activity{
 	             pDialog.dismiss();
 			 final EditText requestText  = (EditText) findViewById(R.id.EdtRequest);
 			    if(jsonString != null){
-			    	Log.d("status",jsonString);
+			    	 
 			    	try {
 						JSONObject jsonObject = new JSONObject(jsonString);
 					    TAG_CONTENT_VALUE = 	jsonObject.getString("content");
-						 
+						 Log.d("d",TAG_CONTENT_VALUE);
 					} catch (JSONException e) {
 						 
 						e.printStackTrace();
 					}
 			    
 			    	webview.loadData(TAG_CONTENT_VALUE,"text/html", "utf-8");
+			     
 			    	
 			    }else{
-			    	requestText.setText(jsonString + " cant find data ");
+			    	Toast.makeText(getApplicationContext(),"Error Completing Request", Toast.LENGTH_LONG).show();
+			    	 
 			    	Log.d("status","null");
 			    }
 		}

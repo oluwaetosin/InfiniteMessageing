@@ -1,17 +1,11 @@
 package com.example.infinitemessaging;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import com.example.infinitemessaging.RequestActivity.WebData;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -22,7 +16,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 public class PushRequestActivity extends Activity{
-	protected String url = "http://www.watershedcorporation.com/push/engine/enquiryPush/";
+	protected String url;
 	protected String request = null;
 	protected String mobileNumb = null;
 	@Override
@@ -31,6 +25,7 @@ public class PushRequestActivity extends Activity{
 		super.onCreate(savedInstanceState);
 		
 		setContentView(R.layout.send_request);
+		url = getString(R.string.domainName) + "/push/engine/enquiryPush/";
 		Button sendRequest = (Button) findViewById(R.id.button1);
 		final EditText requestText  = (EditText) findViewById(R.id.editText1);
 		 SharedPreferences pref = PushRequestActivity.this.getSharedPreferences("com.example.infinitemessaging.myPrefFile",0);
@@ -85,7 +80,7 @@ public class PushRequestActivity extends Activity{
 	 public class WebData extends AsyncTask<String, Void, Void>{
 	        
 	    	private ProgressDialog pDialog;
-			private String jsonString = null;
+			 
 		    WebView webview = (WebView) findViewById(R.id.webRequestView);
 
 			@Override

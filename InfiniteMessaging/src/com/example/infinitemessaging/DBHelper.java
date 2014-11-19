@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DBHelper extends SQLiteOpenHelper {
 	 
 	private static final String DATABASE_NAME = "notification";
-	private static final int DATABASE_VERSION = 6;
+	private static final int DATABASE_VERSION = 7;
 	private static final String TABLE_NAME = "push";
 
 	public DBHelper(Context context) {
@@ -65,9 +65,9 @@ public class DBHelper extends SQLiteOpenHelper {
 				 		     + "register TEXT NOT NULL"
 				 		     + ");";
  db.execSQL(sqlChannels);
- db.insert("push", null, tableContent);
- db.insert("push", null, tableContent);
- db.insert("push", null, tableContent);
+ //db.insert("push", null, tableContent);
+ //db.insert("push", null, tableContent);
+ //db.insert("push", null, tableContent);
 
  ContentValues content1 = new ContentValues();
                content1.put("name", "news");
@@ -83,9 +83,19 @@ public class DBHelper extends SQLiteOpenHelper {
  ContentValues content3 = new ContentValues();
  				content3.put("name", "sport");
                 content3.put("register","true");
- 
+  
+ContentValues content4 = new ContentValues();
+content4.put("name", "leisure/events");
+content4.put("register","false");
+
+ContentValues content5 = new ContentValues();
+content5.put("name", "movies");
+content5.put("register","false");
+
    db.insert("channels", null, content1);
    db.insert("channels", null, content2);
    db.insert("channels", null, content3);
+   db.insert("channels", null, content4);
+   db.insert("channels", null, content5);
 	}	 
 }

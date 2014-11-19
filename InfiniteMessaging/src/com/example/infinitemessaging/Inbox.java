@@ -1,16 +1,10 @@
 package com.example.infinitemessaging;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
+import java.io.PrintWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.util.Scanner;
 
 import android.app.AlertDialog;
 import android.app.ListActivity;
@@ -39,7 +33,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class Inbox extends ListActivity {
-
+  String domainUrl;
 	DBHelper oData;
 	Button getLocation;
 	LocationHelper location;
@@ -47,14 +41,15 @@ public class Inbox extends ListActivity {
 	private String latitude;
 	public static String userId = null;
 	public static String deviceId = null;
-	public static String url = "http://watershedcorporation.com/push/engine/receiveAlert/index.php";
+	public   String url;
 	SharedPreferences sharedprefernce;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		
+		domainUrl = getString(R.string.domainName); 
+		url = domainUrl + "/push/engine/receiveAlert/index.php";
 		 setContentView(R.layout.listactivity_inbox);
 		sharedprefernce = this.getSharedPreferences("com.example.infinitemessaging.myPrefFile",0);
 		 userId = sharedprefernce.getString("userID", "");
@@ -134,6 +129,7 @@ public class Inbox extends ListActivity {
 	
 	private class MyMessageadapter extends ResourceCursorAdapter{
 
+		@SuppressWarnings("deprecation")
 		public MyMessageadapter(Context context, int layout, Cursor c) {
 			super(context, layout, c);
 			// TODO Auto-generated constructor stub
@@ -239,25 +235,33 @@ public class Inbox extends ListActivity {
 		@Override
 		protected String doInBackground(String... params) {
 			// TODO Auto-generated method stub
-			String lat = params[0];
-			String lng = params[1];
+			String response = null;
 			 
-			
-			HttpClient httpclient = new DefaultHttpClient();
-			HttpPost httpost = new HttpPost(url);
 			try {
-				List<NameValuePair> nameValuePair = new ArrayList<NameValuePair>(
-						2);
-				nameValuePair.add(new BasicNameValuePair("lat", lat));
-				nameValuePair.add(new BasicNameValuePair("lng", lng));
-				nameValuePair.add(new BasicNameValuePair("userId", userId));
-				nameValuePair.add(new BasicNameValuePair("deviceID", deviceId));
-				httpost.setEntity(new UrlEncodedFormEntity(nameValuePair));
-				httpclient.execute(httpost);
-			} catch (ClientProtocolException e) {
+				String data = "lat="+ URLEncoder.encode( params[0],"UTF-8")+"&lng="+URLEncoder.encode( params[1],"UTF-8")+
+						"&userId="+ URLEncoder.encode(userId,"UTF-8")+ "&deviceID="+ URLEncoder.encode(deviceId,"UTF-8");
+				
+				URL urlPost =  new URL(url);
+				HttpURLConnection conn;
+				conn = (HttpURLConnection)urlPost.openConnection();
+				conn.setDoOutput(true);
+				conn.setRequestMethod("POST");
+				
+				conn.setFixedLengthStreamingMode(data.getBytes().length);
+				conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+				PrintWriter out = new PrintWriter(conn.getOutputStream());
+				out.print(data);
+				out.close();
+				Scanner inStream = new Scanner(conn.getInputStream());
 
-			} catch (IOException e) {
+				//process the stream and store it in StringBuilder
+				while(inStream.hasNextLine()){
+				response +=(inStream.nextLine());
+				}
+				inStream.close();		 
+			} catch (Exception e) {
 				// TODO: handle exception
+				e.printStackTrace();
 			}
 			return null;
 		}
